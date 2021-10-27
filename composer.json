@@ -1,4 +1,9 @@
 {
+    "name": "sjiamnonca/nette-apication",
+	"description": "Nette package composer test",
+	"keywords": ["nette", "API", "simplified"],
+	"type": "project",
+	"license": ["MIT", "BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
     "require": {
         "nette/di": "^3.0",
         "nette/neon": "^3.2",
