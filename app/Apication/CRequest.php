@@ -2,11 +2,9 @@
 
 namespace APIcation;
 
+use APIcation\Security\SessionManager;
 use Exception;
-use InvalidArgumentException;
 use Nette;
-use Nette\InvalidStateException;
-use Tracy\Debugger;
 
 /**
  * Presenter request.
@@ -17,7 +15,7 @@ use Tracy\Debugger;
  * @property array $files
  * @property string|null $method
  */
-final class Request
+class Request
 {
 	use Nette\SmartObject;
 
@@ -30,17 +28,17 @@ final class Request
 	/** @var string HTTP method */
 	private string $method;
 
-	/** @var bool Using HTPS */
-	private bool $https;
-
-	/** @var bool Using Private key? */
-	private bool $private;
-
 	/** @var array */
 	private array $post;
 
 	/** @var array */
 	private array $files;
+
+	/** @var array */
+	private array $headers;
+
+	/** @var array Request was authorized via API key */
+	private bool $authorized;
 
 	/**
 	 * @param  string  $name  presenter name (module:module:presenter)
@@ -48,22 +46,26 @@ final class Request
 	public function __construct(
 		string $queryString,
 		string $method,
-		bool $https,
-		bool $private,
 		array $post,
-		array $files
+		array $files,
+		array $headers,
+		bool $authorized
 	) {
 		$this->queryString = $queryString;
 		$this->method = $method;
-		$this->processPath($queryString);
-		$this->https = $https;
-		$this->private = $private;
 		$this->post = $post;
 		$this->files = $files;
+		$this->headers = $headers;
+		$this->authorized = $authorized;
+
+		$this->processPath($queryString);
 	}
 
-	private function processPath(string $queryString): void
+	public static function breakPath(string $queryString): array
 	{
+		if (empty($queryString)){
+			throw new Exception('Querystring mustnot be empty');
+		}
 		/**
 		 * Path to wanted action
 		 * 1. Endpoint
@@ -71,22 +73,22 @@ final class Request
 		 */
 		$res = explode('/', trim($queryString, '/'));
 
-		if (count($res) < 1){
-			throw new InvalidStateException();
-		}
-
 		// skip API
-		for ($i = 0; $item = $res[$i] ?? false; $i++){
-			if ($item === 'api'){
-				// because we use NodeJS proxy pass to API when developing on localhost
-				// we prepended 'api' this removes it
-				continue;
-			}
-			$this->path[] = $item;
+		if ($res[0] === 'api'){
+			array_shift($res);
 		}
 
-		$this->path[0] = $this->path[0] ? 'E' . ucfirst($this->path[0]) : null;
-        $this->path[1] = $this->path[1] ?? 'default';
+		return $res;
+	}
+
+	private function processPath(string $queryString): void
+	{
+		$res = self::breakPath($queryString);
+
+		$this->path = [
+			$res[0] ? 'E' . ucfirst($res[0]) : null,
+			trim($res[1] ?? 'default', "_")
+		];
 	}
 
 	/**
@@ -102,6 +104,7 @@ final class Request
 	 */
 	public function getEndpointPath(): string
 	{
+		// add full namespace path
 		return 'APIcation\Endpoints\\' . $this->path[0];
 	}
 
@@ -142,33 +145,20 @@ final class Request
 	}
 
 	/**
-	 * If private key is used
+	 * Get all headers or one of them
+	 * 
+	 * @param string Header name if you want specific one
 	 */
-	public function getPrivate(): bool
+	public function getHeader(?string $headerName = null)
 	{
-		return $this->private;
+		return $headerName ?
+			($this->headers[$headerName] ?? false) : $this->headers;
 	}
 
-
-	/**
-	 * Sets the flag.
-	 * @return static
-	 */
-	public function setFlag(string $flag, bool $value = true)
+	public function isAuthorized()
 	{
-		$this->flags[$flag] = $value;
-		return $this;
+		return $this->authorized;
 	}
-
-
-	/**
-	 * Checks the flag.
-	 */
-	public function hasFlag(string $flag): bool
-	{
-		return !empty($this->flags[$flag]);
-	}
-
 
 	public function toArray(): array
 	{

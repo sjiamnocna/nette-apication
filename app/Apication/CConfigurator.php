@@ -1,19 +1,17 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace APIcation;
 
-use Nette;
-use Nette\Configurator as NetteConfigurator;
-use Tracy;
-
+use Nette\Bootstrap\Configurator;
 
 /**
- * Initial system DI container generator.
+ * Remove some Configurator dependencies
  */
-class Configurator extends NetteConfigurator
+class CConfigurator extends Configurator
 {
-    /** @var array overload default service list */
+    /** @var array */
 	public $defaultExtensions = [
+		'application' => [Nette\Bridges\ApplicationDI\ApplicationExtension::class, ['%debugMode%', ['%appDir%'], '%tempDir%/cache/nette.application']],
 		'cache' => [Nette\Bridges\CacheDI\CacheExtension::class, ['%tempDir%']],
 		'constants' => Extensions\ConstantsExtension::class,
 		'database' => [Nette\Bridges\DatabaseDI\DatabaseExtension::class, ['%debugMode%']],
@@ -22,6 +20,7 @@ class Configurator extends NetteConfigurator
 		'extensions' => Nette\DI\Extensions\ExtensionsExtension::class,
 		'http' => [Nette\Bridges\HttpDI\HttpExtension::class, ['%consoleMode%']],
 		'inject' => Nette\DI\Extensions\InjectExtension::class,
+		'mail' => Nette\Bridges\MailDI\MailExtension::class,
 		'php' => Extensions\PhpExtension::class,
 		'search' => [Nette\DI\Extensions\SearchExtension::class, ['%tempDir%/cache/nette.search']],
 		'security' => [Nette\Bridges\SecurityDI\SecurityExtension::class, ['%debugMode%']],
