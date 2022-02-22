@@ -25,8 +25,7 @@ It's very simple, minimalistic and lightweight (by design).
 Nette, Latte etc. are great. It's IMHO just not efficient enough for modern "API" world
 
 ## Usage
-
-- Begin by `composer install`
+- Do `composer require sjiamnocna/nette-apication` or add `sjiamnocna/nette-apication` to your composer.json and run `composer install`
 - Create `temp` and `log` directories for Nette to work
 - Add service to configuration `app/config/common.neon`
 ```
@@ -47,7 +46,7 @@ OR use Makefile: `make run` to run local PHP server
 
 ## Performance
 - Performance is what matters here
-  - API solution without any API security made from Nette with Presenters and Responses took over `80ms`, `20ms` when cached
+  - API solution made from basic Nette-app with Presenters and Responses  without any API security took over `80ms`, `20ms` when cached
   - This project implements simple security, DI injects into Endpoints and performs around `40ms`, `5ms` cached
   - **Measured by Tracy** - when debug mode is off I guess the app will perform even better
 
