@@ -1,22 +1,35 @@
 {
-    "name": "sjiamnocna/nette-apication",
-    "description": "Simple & lightweight API with security based on Nette",
-    "keywords": ["nette", "API", "simplified"],
-    "type": "library",
-    "license": ["MIT", "BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
-    "authors": [
-        {
-            "name": "Šimon Janča",
-            "email": "jancikuvmail@gmail.com"
-        }
-    ],
-    "require": {
-	    "php": ">=7.4",
-        "nette/di": "^3.0",
-        "nette/neon": "^3.2",
-        "nette/utils": "^3.2",
-        "nette/nette": "^3.1",
-        "nette/http": "^3.1"
-    },
-    "minimum-stability": "dev"
+  "name": "sjiamnocna/nette-apication",
+  "description": "Simple & lightweight API with security based on Nette",
+  "keywords": [
+    "nette",
+    "API",
+    "simplified"
+  ],
+  "type": "library",
+  "license": [
+    "MIT",
+    "BSD-3-Clause",
+    "GPL-2.0",
+    "GPL-3.0"
+  ],
+  "authors": [
+    {
+      "name": "Šimon Janča",
+      "email": "jancikuvmail@gmail.com"
+    }
+  ],
+  "autoload": {
+    "classmap": ["src/Apication/", "src/Endpoints/"]
+  },
+  "require": {
+    "php": ">=7.4",
+    "nette/di": "^3.0",
+    "nette/neon": "^3.2",
+    "nette/utils": "^3.2",
+    "nette/nette": "^3.1",
+    "nette/http": "^3.1",
+    "ext-json": "*"
+  },
+  "minimum-stability": "dev"
 }

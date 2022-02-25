@@ -2,6 +2,7 @@
 
 namespace APIcation\Endpoints;
 
+use APIcation\CRequest;
 use APIcation\Request;
 use Nette\Application\Response;
 use Exception;
@@ -15,7 +16,7 @@ use function ucfirst;
  * Methods with {$method}Prefix are executed for custom HTTP methods like `postMyAction` or `getMyAction`
  * Both things can be combined into __postMyAction for authorized POST request
  */
-abstract class AbstractEndpoint
+abstract class CAbstractEndpoint
 {
     use SmartObject;
     
@@ -33,12 +34,12 @@ abstract class AbstractEndpoint
     * Expects all methods to return any of Nette\Application\Response objects
     *
     * @param array     NEON Configuration parameters
-    * @param Request $Request
+    * @param CRequest $Request
     *
     * @return Response
     * @throws Exception If specified action doesn't exist
     */
-    public function run(array $params, Request $Request): Response
+    public function run(array $params, CRequest $Request): Response
     {
         // allows call to parent context and e.g. to get config
         $this->params = $params;

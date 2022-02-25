@@ -7,7 +7,7 @@ use Nette\Application\Responses\JsonResponse;
 /**
  * Very useful and highly enjoyable endpoint that helps you get your "Hello" string
  */
-class EHello extends AbstractEndpoint
+class EHello extends CAbstractEndpoint
 {
 
    /**

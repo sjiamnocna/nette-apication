@@ -15,7 +15,7 @@ use Nette;
  * @property array $files
  * @property string|null $method
  */
-class Request
+class CRequest
 {
 	use Nette\SmartObject;
 

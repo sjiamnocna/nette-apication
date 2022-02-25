@@ -2,10 +2,10 @@
 
 namespace APIcation;
 
-use APIcation\Endpoints\Endpoint;
+use APIcation\Endpoints\CAbstractEndpoint;
+use APIcation\CRequest;
 use Nette;
 use Nette\Utils\Arrays;
-use APIcation\Request;
 use Exception;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
@@ -14,7 +14,7 @@ use Nette\Http\IResponse;
 /**
  * API entrypoint controller, complementary to Nette\Aplication
  */
-class Application
+class CApplication
 {
 	use Nette\SmartObject;
 
@@ -31,8 +31,8 @@ class Application
 	/** @var Nette\Http\IResponse */
 	private IResponse $HttpResponse;
 
-	/** @var Endpoint Current endpoint in use object */
-	private Endpoint $Endpoint;
+	/** @var CAbstractEndpoint Current endpoint in use object */
+	private CAbstractEndpoint $Endpoint;
 
 	/** @var CSecurity */
 	private CSecurity $Security;
@@ -74,9 +74,9 @@ class Application
 	/**
 	 * Runs whole application based on request
 	 * 
-	 * @param Request
+	 * @param CRequest
 	 */
-	public function processRequest(Request $Request): void
+	public function processRequest(CRequest $Request): void
 	{
 		Arrays::invoke($this->onRequest, $this, $Request);
 
@@ -95,7 +95,7 @@ class Application
 
 		// we need to run this command but it doesn't exist
 		if(!method_exists($Endpoint, 'run')){
-			throw new Exception('Unknown action', 404);
+			throw new Exception('Unknown endpoint', 404);
 		}
 
 		// run wanted class method and return it's content
@@ -108,9 +108,9 @@ class Application
 	/**
 	 * Create initial request object
 	 * 
-	 * @return Request
+	 * @return CRequest
 	 */
-	public function createInitialRequest(): Request
+	public function createInitialRequest(): CRequest
 	{
 		$postData = $this->HttpRequest->getPost();
 		$headers = $this->HttpRequest->getHeaders();
@@ -125,7 +125,7 @@ class Application
         }
 		
 		// finally create and return request
-		return new Request(
+		return new CRequest(
 			$_SERVER['REQUEST_URI'], // URI query string
 			$this->HttpRequest->getMethod(), // HTTP2 method
 			$postData ?? [],
@@ -135,9 +135,11 @@ class Application
 		);
 	}
 
-	/**
-	 * Dispatch a HTTP request to a front controller.
-	 */
+    /**
+     * Dispatch a HTTP request to a front controller.
+     *
+     * @throws \Throwable
+     */
 	public function run(): void
 	{
 		try {
