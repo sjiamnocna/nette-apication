@@ -3,7 +3,6 @@
 namespace APIcation\Endpoints;
 
 use APIcation\CRequest;
-use APIcation\Request;
 use Nette\Application\Response;
 use Exception;
 use Nette\SmartObject;
@@ -25,9 +24,9 @@ abstract class CAbstractEndpoint
     /**
      * Name services with capital letter first to distinguish
      * 
-     * @var Request
+     * @var CRequest
      */
-    protected Request $Request;
+    protected CRequest $Request;
 
    /**
     * Global run method
