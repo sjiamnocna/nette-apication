@@ -2,18 +2,11 @@
 
 namespace APIcation;
 
-use APIcation\Security\SessionManager;
 use Exception;
 use Nette;
 
 /**
- * Presenter request.
- *
- * @property string $presenterName
- * @property array $parameters
- * @property array $post
- * @property array $files
- * @property string|null $method
+ * Represents current Http Request
  */
 class CRequest
 {
@@ -146,7 +139,7 @@ class CRequest
 
 	/**
 	 * Get all headers or one of them
-	 * 
+	 *
 	 * @param string Header name if you want specific one
 	 */
 	public function getHeader(?string $headerName = null)
@@ -160,10 +153,15 @@ class CRequest
 		return $this->authorized;
 	}
 
-	public function toArray(): array
+	public function exportBarData(): array
 	{
-		$params = $this->params;
-		$params['presenter'] = $this->name;
-		return $params;
+		return [
+        $this->getEndpoint(),
+        $this->getAction(),
+        $this->getEndpointPath(),
+        $this->isAuthorized(),
+        $this->getPost(),
+        $this->headers
+      ];
 	}
 }

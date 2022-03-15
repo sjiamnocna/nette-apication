@@ -10,6 +10,7 @@ use Exception;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
+use Tracy\Debugger;
 
 /**
  * API entrypoint controller, complementary to Nette\Aplication
@@ -36,6 +37,8 @@ class CApplication
 
 	/** @var CSecurity */
 	private CSecurity $Security;
+
+   private array $barData = [];
 
 	/** @var array<callable(self): void>  Occurs before the application loads presenter */
 	public array $onStartup = [];
@@ -138,7 +141,7 @@ class CApplication
     /**
      * Dispatch a HTTP request to a front controller.
      *
-     * @throws \Throwable
+     * @throws \Throwable Pass error to Tracy
      */
 	public function run(): void
 	{
@@ -150,6 +153,10 @@ class CApplication
 			Arrays::invoke($this->onError, $this, $e);
 			Arrays::invoke($this->onShutdown, $this, $e);
 			throw $e;
-		}
+		} finally{
+          Debugger::getBar()->addPanel(
+            new TracyModules\CApplicationTracy($this->barData)
+          );
+      }
 	}
 }
