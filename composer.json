@@ -22,7 +22,7 @@
   "autoload": {
     "classmap": ["src/Apication/", "src/Endpoints/", "src/CLIRunner/"]
   },
-  "bin": ["bin/runcommand.php"],
+  "bin": ["CLIRunner/runcommand.php"],
   "require": {
     "php": ">=7.4",
     "nette/di": "^3.0",

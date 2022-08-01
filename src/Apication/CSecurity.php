@@ -50,6 +50,10 @@ class CSecurity
         // get session data or empty array
         $this->Section = $Session->getSection(self::class);
 
+        if (method_exists($this, 'loadServices')){
+            $services = array_merge($services, $this->loadServices);
+        }
+
         $this->services = $services;
     }
 
@@ -113,6 +117,13 @@ class CSecurity
         return false;
     }
 
+    private function validateServiceKey(string $serviceName, string $serviceKey): bool
+    {
+        $serviceHashKey = $this->services[ $serviceName ];
+
+        return password_verify( $serviceKey, $serviceHashKey );
+    }
+
     /**
      * Authorize service via service key using serviceName from session identified by issued accessKey
      * service name must be specified before via authenticateRequest call
@@ -139,7 +150,7 @@ class CSecurity
             throw new Exception('No service name specified');
         }
 
-        if (strcmp($serviceKey, 'abcdef') === 0) {
+        if ($this->validateServiceKey( $serviceName, $serviceKey )) {
             $this->isServiceAuthorized = true;
             $this->setSessionProp('serviceAuthorized', true);
             return $this->createAccessKey($serviceName);
@@ -154,6 +165,7 @@ class CSecurity
     public function closeConnection()
     {
         $this->setSessionProp('serviceAuthorized', false);
+        $this->setSessionProp('accessKey', false);
         $this->isServiceAuthorized = false;
         $this->isRequestAuthenticated = false;
     }
