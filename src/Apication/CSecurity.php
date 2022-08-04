@@ -117,11 +117,16 @@ class CSecurity
         return false;
     }
 
+    /**
+     * Checks the keys by string compare
+     * @param string $serviceName   Service name
+     * @param string $serviceKey    Service key got from client
+     *
+     * @return bool
+     */
     private function validateServiceKey(string $serviceName, string $serviceKey): bool
     {
-        $serviceHashKey = $this->services[ $serviceName ];
-
-        return password_verify( $serviceKey, $serviceHashKey );
+        return strcmp( $serviceKey, $this->services[ $serviceName ] ) === 0;
     }
 
     /**
@@ -162,7 +167,7 @@ class CSecurity
     /**
      * Set object default state
      */
-    public function closeConnection()
+    public function closeConnection(): void
     {
         $this->setSessionProp('serviceAuthorized', false);
         $this->setSessionProp('accessKey', false);
@@ -204,9 +209,9 @@ class CSecurity
      * 
      * @return  mixed       Saved value
      */
-    public function setSessionProp(string $prop, $value)
+    public function setSessionProp(string $prop, $value): void
     {
-        return $this->Section->set($prop, $value);
+        $this->Section->set($prop, $value);
     }
 
     /**
@@ -255,7 +260,7 @@ class CSecurity
      * @param int           HTTP Return code
      * @param null|array    Data retured in JSON format
      */
-    public static function dietCoke(int $code, ?array $data = null)
+    public static function dietCoke(int $code, ?array $data = null): void
     {
         http_response_code($code);
 
