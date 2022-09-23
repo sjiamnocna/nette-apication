@@ -105,15 +105,21 @@ class CSecurity
         if (!$this->getSessionProp('serviceName')) {
             throw new Exception('Not specified service name', 403);
         }
+
+        /**
+         * @var string | bool Initialized access key from session
+         */
+        $sessionAccessKey = $this->getSessionProp('accessKey');
+
+        if (!$sessionAccessKey) {
+            throw new Exception('Use initialization with service name first', 403);
+        }
         
         // strcmp returns 0 if equal
-        if (strcmp($accessKey, $this->getSessionProp('accessKey')) === 0) {
+        if (strcmp($accessKey, $sessionAccessKey) === 0) {
             return $this->requestAuthenticated = true;
         }
 
-        bdump($this->getSessionProp('serviceName'), 'session: serviceName');
-        bdump($this->getSessionProp('accessKey'), 'session: accessKey');
-        bdump($accessKey, 'current: accessKey');
         return false;
     }
 
