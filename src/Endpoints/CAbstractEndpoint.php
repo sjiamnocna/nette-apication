@@ -3,7 +3,6 @@
 namespace APIcation\Endpoints;
 
 use APIcation\CRequest;
-use Nette\Application\Response;
 use Exception;
 use Nette\SmartObject;
 use function method_exists;
@@ -35,10 +34,10 @@ abstract class CAbstractEndpoint
     * @param array     NEON Configuration parameters
     * @param CRequest $Request
     *
-    * @return Response
+    * @return CResponse
     * @throws Exception If specified action doesn't exist
     */
-    public function run(array $params, CRequest $Request): Response
+    public function run(array $params, CRequest $Request): CResponse
     {
         // allows call to parent context and e.g. to get config
         $this->params = $params;

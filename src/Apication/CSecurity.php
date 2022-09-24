@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace APIcation;
 
+use APIcation\Endpoints\CResponse;
 use \Exception;
 use Nette\Http\Request;
 use Nette\Http\Session;
@@ -268,14 +269,7 @@ class CSecurity
      */
     public static function dietCoke(int $code, ?array $data = null): void
     {
-        http_response_code($code);
-
-        if ($data) {
-            header('Content-Type: application/json; charset=utf-8');
-            $data = json_encode($data);
-        }
-
-        die($data);
+        new CResponse('', $data, $code);
     }
 
     /**
@@ -323,7 +317,7 @@ class CSecurity
 
                         $res = $this->serviceInit($serviceName);
                         if ($res) {
-                            self::dietCoke(200, ['accessKey' => $res]);
+                            new CResponse('accessKey', ['accessKey' => $res], 200);
                         } else {
                             throw new Exception("Service initialization failed");
                         }
@@ -335,14 +329,14 @@ class CSecurity
                     }
                     $res = $this->authorizeService($accessKey, $serviceKey);
                     if ($res) {
-                        self::dietCoke(200, ['accessKey' => $res]);
+                        new CResponse('accessKey', ['accessKey' => $res], 200);
                     } else {
                         throw new Exception('Service authorization failed, key ' . sprintf('\'%s\' (%s)', $serviceKey, gettype($serviceKey)));
                     }
                     break;
                 case 'connectionClose':
                     $this->closeConnection();
-                    self::dietCoke(200);
+                    new CResponse('closeConnection', null, 200);
                     break;
                 default:
                     throw new Exception("Invalid action", 500);

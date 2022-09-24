@@ -17,8 +17,8 @@ class EHello extends CAbstractEndpoint
     public function default()
     {
        // accessible via calling to '/hello'
-        return new JsonResponse([
-            'hello' => 'Hello World!'
+        return new CResponse('default', [
+          'hello' => 'Hello World!'
         ]);
     }
 
@@ -28,8 +28,8 @@ class EHello extends CAbstractEndpoint
     */
     public function __default()
     {
-        return new JsonResponse([
-            'hello' => 'Hello from the other side!'
+        return new CResponse('default', [
+          'hello' => 'Hello from the other side!'
         ]);
     }
 }
