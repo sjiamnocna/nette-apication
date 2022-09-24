@@ -2,6 +2,7 @@
 
 namespace APIcation\Endpoints;
 
+use APIcation\CResponse;
 use Nette\Application\Responses\JsonResponse;
 
 /**
@@ -12,9 +13,10 @@ class EHello extends CAbstractEndpoint
 
    /**
     * Endpoint accessible via calling to '/hello'
-    * @return JsonResponse
+    *
+    * @return CResponse
     */
-    public function default()
+    public function default(): CResponse
     {
        // accessible via calling to '/hello'
         return new CResponse('default', [
@@ -24,9 +26,9 @@ class EHello extends CAbstractEndpoint
 
    /**
     * Endpoint accessible via calling to '/hello' with service-key verified session
-    * @return JsonResponse
+    * @return CResponse
     */
-    public function __default()
+    public function __default(): CResponse
     {
         return new CResponse('default', [
           'hello' => 'Hello from the other side!'

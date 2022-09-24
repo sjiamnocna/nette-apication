@@ -1,6 +1,6 @@
-e<?php
+<?php declare(strict_types=1);
 
-namespace APIcation\Endpoints;
+namespace APIcation;
 
 use Nette\Utils\Json;
 

@@ -105,7 +105,8 @@ class CApplication
 		$Response = call_user_func([$Endpoint, 'run'], $this->params, $Request, $this->HttpResponse);
 
 		Arrays::invoke($this->onResponse, $this, $Response);
-		$Response->send($this->HttpRequest, $this->HttpResponse);
+
+		$Response->send();
 	}
 
 	/**

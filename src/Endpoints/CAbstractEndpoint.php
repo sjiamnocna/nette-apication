@@ -3,6 +3,7 @@
 namespace APIcation\Endpoints;
 
 use APIcation\CRequest;
+use APIcation\CResponse;
 use Exception;
 use Nette\SmartObject;
 use function method_exists;

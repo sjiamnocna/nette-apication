@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace APIcation;
 
-use APIcation\Endpoints\CResponse;
+use APIcation\CResponse;
 use \Exception;
 use Nette\Http\Request;
 use Nette\Http\Session;
@@ -256,20 +256,15 @@ class CSecurity
         return md5($tokenString);
     }
 
+    /**
+     * Checks format of the access key
+     * @param string $accessKey
+     *
+     * @return bool
+     */
     public static function isValidAccessKey(string $accessKey)
     {
         return strlen($accessKey) === 32;
-    }
-
-    /**
-     * Die with HTTP code, send JSON data if specified
-     * 
-     * @param int           HTTP Return code
-     * @param null|array    Data retured in JSON format
-     */
-    public static function dietCoke(int $code, ?array $data = null): void
-    {
-        new CResponse('', $data, $code);
     }
 
     /**
@@ -317,7 +312,7 @@ class CSecurity
 
                         $res = $this->serviceInit($serviceName);
                         if ($res) {
-                            new CResponse('accessKey', ['accessKey' => $res], 200);
+                            (new CResponse('accessKey', ['accessKey' => $res], 200))->send();
                         } else {
                             throw new Exception("Service initialization failed");
                         }
@@ -329,14 +324,14 @@ class CSecurity
                     }
                     $res = $this->authorizeService($accessKey, $serviceKey);
                     if ($res) {
-                        new CResponse('accessKey', ['accessKey' => $res], 200);
+                        (new CResponse('accessKey', ['accessKey' => $res], 200))->send();
                     } else {
                         throw new Exception('Service authorization failed, key ' . sprintf('\'%s\' (%s)', $serviceKey, gettype($serviceKey)));
                     }
                     break;
                 case 'connectionClose':
                     $this->closeConnection();
-                    new CResponse('closeConnection', null, 200);
+                    (new CResponse('closeConnection', null, 200))->send();
                     break;
                 default:
                     throw new Exception("Invalid action", 500);
